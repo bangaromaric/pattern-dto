@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: pattern-dto
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:./target/h2db/db/pattern;DB_CLOSE_DELAY=-1
+    username: transaction
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  h2:
+    console:
+      # disable spring boot built-in h2-console since we start it manually with correct configuration
+      enabled: true

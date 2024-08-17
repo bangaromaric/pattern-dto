@@ -14,3 +14,11 @@ spring:
     console:
       # disable spring boot built-in h2-console since we start it manually with correct configuration
       enabled: true
+
+jhipster:
+  clientApp:
+    name: 'patterndtoApp'
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/

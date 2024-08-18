@@ -54,6 +54,20 @@ public class UtilisateurService {
         return utilisateurMapper.toDto(utilisateur);
     }
 
+
+    /**
+     * Save a utilisateur.
+     *
+     * @param utilisateur the entity to save.
+     * @return the persisted entity.
+     */
+    public Utilisateur save_1(Utilisateur utilisateur) throws Exception {
+        log.debug("Request to save Utilisateur : {}", utilisateur);
+        utilisateur.setPassword(EncryptionUtil.encrypt(utilisateur.getPassword(), secretKey));
+        utilisateur = utilisateurRepository.save(utilisateur);
+        return utilisateur;
+    }
+
     /**
      * Update a utilisateur.
      *

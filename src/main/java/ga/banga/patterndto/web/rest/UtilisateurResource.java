@@ -1,5 +1,6 @@
 package ga.banga.patterndto.web.rest;
 
+import ga.banga.patterndto.domain.Utilisateur;
 import ga.banga.patterndto.repository.UtilisateurRepository;
 import ga.banga.patterndto.service.UtilisateurQueryService;
 import ga.banga.patterndto.service.UtilisateurService;
@@ -57,6 +58,28 @@ public class UtilisateurResource {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurQueryService = utilisateurQueryService;
     }
+
+
+    /**
+     * {@code POST  /utilisateurs} : Create a new utilisateur.
+     *
+     * @param utilisateur the utilisateurDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new utilisateurDTO, or with status {@code 400 (Bad Request)} if the utilisateur has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("etape_1")
+    public ResponseEntity<Utilisateur> createUtilisateur_1(@Valid @RequestBody Utilisateur utilisateur) throws Exception {
+        log.debug("REST request to save Utilisateur : {}", utilisateur);
+        if (utilisateur.getId() != null) {
+            throw new BadRequestAlertException("A new utilisateur cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        utilisateur = utilisateurService.save_1(utilisateur);
+        return ResponseEntity.created(new URI("/api/utilisateurs/" + utilisateur.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, utilisateur.getId().toString()))
+                .body(utilisateur);
+    }
+
+
 
     /**
      * {@code POST  /utilisateurs} : Create a new utilisateur.

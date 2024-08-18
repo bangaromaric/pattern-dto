@@ -23,6 +23,7 @@ public class UtilisateurDTO implements Serializable {
     private String prenom;
 
     private String email;
+    private String fullName;
 
     @Size(max = 50)
     private String phoneNumber;
@@ -30,6 +31,14 @@ public class UtilisateurDTO implements Serializable {
     private String password;
 
     private AgenceDTO agence;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public UUID getId() {
         return id;

@@ -55,7 +55,7 @@ public class AgenceResource {
     }
 
     /**
-     * {@code POST  /agences} : Create a new agence.
+     * {@code POST  /agences} : Create a new agences.
      *
      * @param agenceDTO the agenceDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new agenceDTO, or with status {@code 400 (Bad Request)} if the agence has already an ID.

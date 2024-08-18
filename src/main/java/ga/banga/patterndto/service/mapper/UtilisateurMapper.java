@@ -21,5 +21,7 @@ public interface UtilisateurMapper extends EntityMapper<UtilisateurDTO, Utilisat
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "libelle", source = "libelle")
+//    @Mapping(target = "totalPrice", expression = "java(product.getPrice() * 1.08)")
+
     AgenceDTO toDtoAgenceLibelle(Agence agence);
 }

@@ -4,6 +4,7 @@ import ga.banga.patterndto.domain.Utilisateur;
 import ga.banga.patterndto.repository.UtilisateurRepository;
 import ga.banga.patterndto.service.dto.UtilisateurDTO;
 import ga.banga.patterndto.service.mapper.UtilisateurMapper;
+import ga.banga.patterndto.service.utils.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.SecretKey;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,10 +31,13 @@ public class UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
 
     private final UtilisateurMapper utilisateurMapper;
+    private SecretKey secretKey;
 
-    public UtilisateurService(UtilisateurRepository utilisateurRepository, UtilisateurMapper utilisateurMapper) {
+    public UtilisateurService(UtilisateurRepository utilisateurRepository, UtilisateurMapper utilisateurMapper) throws Exception {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurMapper = utilisateurMapper;
+        // Générer une clé au démarrage ou charger depuis un stockage sécurisé
+        this.secretKey = EncryptionUtil.generateKey();
     }
 
     /**
@@ -38,8 +46,9 @@ public class UtilisateurService {
      * @param utilisateurDTO the entity to save.
      * @return the persisted entity.
      */
-    public UtilisateurDTO save(UtilisateurDTO utilisateurDTO) {
+    public UtilisateurDTO save(UtilisateurDTO utilisateurDTO) throws Exception {
         log.debug("Request to save Utilisateur : {}", utilisateurDTO);
+        utilisateurDTO.setPassword(EncryptionUtil.encrypt(utilisateurDTO.getPassword(), secretKey));
         Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurDTO);
         utilisateur = utilisateurRepository.save(utilisateur);
         return utilisateurMapper.toDto(utilisateur);
@@ -107,5 +116,20 @@ public class UtilisateurService {
     public void delete(UUID id) {
         log.debug("Request to delete Utilisateur : {}", id);
         utilisateurRepository.deleteById(id);
+    }
+
+    public String decryptAttribute(String encryptedAttribute) throws Exception {
+        return EncryptionUtil.decrypt(encryptedAttribute, secretKey);
+    }
+
+    // Optionnel : stocker et charger la clé en tant que chaîne
+    public void saveKey(String filePath) throws IOException {
+        String keyString = EncryptionUtil.keyToString(secretKey);
+        Files.write(Paths.get(filePath), keyString.getBytes());
+    }
+
+    public void loadKey(String filePath) throws IOException {
+        String keyString = new String(Files.readAllBytes(Paths.get(filePath)));
+        this.secretKey = EncryptionUtil.stringToKey(keyString);
     }
 }

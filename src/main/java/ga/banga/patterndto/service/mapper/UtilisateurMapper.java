@@ -15,13 +15,14 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface UtilisateurMapper extends EntityMapper<UtilisateurDTO, Utilisateur> {
     @Mapping(target = "agence", source = "agence", qualifiedByName = "agenceLibelle")
-    //@Mapping(target = "", expression = "java(s.getNom() + \" \" + s.getPrenom())"))
+    @Mapping(target = "fullName", expression = "java(s.getNom() +' '+ s.getPrenom() )")
     UtilisateurDTO toDto(Utilisateur s);
 
     @Named("agenceLibelle")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "libelle", source = "libelle")
-   @Mapping(target = "totalPrice", expression = "java(product.getPrice() * 1.08)")
+//   @Mapping(target = "totalPrice", expression = "java(product.getPrice() * 1.08)")
+//    @Mapping(target = "libelle", expression = "java(agence.getNom() )"))
     AgenceDTO toDtoAgenceLibelle(Agence agence);
 }

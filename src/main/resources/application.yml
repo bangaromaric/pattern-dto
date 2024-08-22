@@ -3,7 +3,6 @@
 #    ROOT: DEBUG
 #    tech.jhipster: DEBUG
 #    org.hibernate.SQL: DEBUG
-
 spring:
   application:
     name: pattern-dto
@@ -35,7 +34,8 @@ spring:
 jhipster:
   clientApp:
     name: 'patterndtoApp'
-
+server:
+  port: 8085
 
 
 

@@ -6,6 +6,7 @@ import ga.banga.patterndto.service.UtilisateurQueryService;
 import ga.banga.patterndto.service.UtilisateurService;
 import ga.banga.patterndto.service.criteria.UtilisateurCriteria;
 import ga.banga.patterndto.service.dto.UtilisateurDTO;
+import ga.banga.patterndto.service.dto.UtilisateurSimpleDTO;
 import ga.banga.patterndto.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -89,15 +90,15 @@ public class UtilisateurResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("etape_2")
-    public ResponseEntity<UtilisateurDTO> createUtilisateur_2(@Valid @RequestBody UtilisateurDTO utilisateurDTO) throws Exception {
+    public ResponseEntity<UtilisateurSimpleDTO> createUtilisateur_2(@Valid @RequestBody UtilisateurDTO utilisateurDTO) throws Exception {
         log.debug("REST request to save Utilisateur : {}", utilisateurDTO);
         if (utilisateurDTO.getId() != null) {
             throw new BadRequestAlertException("A new utilisateur cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        utilisateurDTO = utilisateurService.save_2(utilisateurDTO);
-        return ResponseEntity.created(new URI("/api/utilisateurs/" + utilisateurDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, utilisateurDTO.getId().toString()))
-            .body(utilisateurDTO);
+        UtilisateurSimpleDTO utilisateurSimpleDTO = utilisateurService.save_2(utilisateurDTO);
+        return ResponseEntity.created(new URI("/api/utilisateurs/" + utilisateurSimpleDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, utilisateurSimpleDTO.getId().toString()))
+            .body(utilisateurSimpleDTO);
     }
     /**
      * {@code POST  /utilisateurs} : Create a new utilisateur.
@@ -107,15 +108,15 @@ public class UtilisateurResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<UtilisateurDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) throws Exception {
+    public ResponseEntity<UtilisateurSimpleDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) throws Exception {
         log.debug("REST request to save Utilisateur : {}", utilisateurDTO);
         if (utilisateurDTO.getId() != null) {
             throw new BadRequestAlertException("A new utilisateur cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        utilisateurDTO = utilisateurService.save(utilisateurDTO);
+        UtilisateurSimpleDTO utilisateurSimpleDTO = utilisateurService.save(utilisateurDTO);
         return ResponseEntity.created(new URI("/api/utilisateurs/" + utilisateurDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, utilisateurDTO.getId().toString()))
-            .body(utilisateurDTO);
+            .body(utilisateurSimpleDTO);
     }
 
     /**

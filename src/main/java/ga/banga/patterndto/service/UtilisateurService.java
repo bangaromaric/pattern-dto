@@ -3,7 +3,9 @@ package ga.banga.patterndto.service;
 import ga.banga.patterndto.domain.Utilisateur;
 import ga.banga.patterndto.repository.UtilisateurRepository;
 import ga.banga.patterndto.service.dto.UtilisateurDTO;
+import ga.banga.patterndto.service.dto.UtilisateurSimpleDTO;
 import ga.banga.patterndto.service.mapper.UtilisateurMapper;
+import ga.banga.patterndto.service.mapper.UtilisateurSimpleMapper;
 import ga.banga.patterndto.service.utils.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,13 @@ public class UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
 
     private final UtilisateurMapper utilisateurMapper;
+    private final UtilisateurSimpleMapper utilisateurSimpleMapper;
     private SecretKey secretKey;
 
-    public UtilisateurService(UtilisateurRepository utilisateurRepository, UtilisateurMapper utilisateurMapper) throws Exception {
+    public UtilisateurService(UtilisateurRepository utilisateurRepository, UtilisateurMapper utilisateurMapper, UtilisateurSimpleMapper utilisateurSimpleMapper) throws Exception {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurMapper = utilisateurMapper;
+        this.utilisateurSimpleMapper = utilisateurSimpleMapper;
         // Générer une clé au démarrage ou charger depuis un stockage sécurisé
         this.secretKey = EncryptionUtil.generateKey();
     }
@@ -46,12 +50,13 @@ public class UtilisateurService {
      * @param utilisateurDTO the entity to save.
      * @return the persisted entity.
      */
-    public UtilisateurDTO save(UtilisateurDTO utilisateurDTO) throws Exception {
+    public UtilisateurSimpleDTO save(UtilisateurDTO utilisateurDTO) throws Exception {
         log.debug("Request to save Utilisateur : {}", utilisateurDTO);
         utilisateurDTO.setPassword(EncryptionUtil.encrypt(utilisateurDTO.getPassword(), secretKey));
         Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurDTO);
         utilisateur = utilisateurRepository.save(utilisateur);
-        return utilisateurMapper.toDto(utilisateur);
+        return utilisateurSimpleMapper.toDto(utilisateur);
+//        return utilisateurMapper.toDto(utilisateur);
     }
 
     /**
@@ -60,7 +65,7 @@ public class UtilisateurService {
      * @param utilisateurDTO the entity to save.
      * @return the persisted entity.
      */
-    public UtilisateurDTO save_2(UtilisateurDTO utilisateurDTO) throws Exception {
+    public UtilisateurSimpleDTO save_2(UtilisateurDTO utilisateurDTO) throws Exception {
         log.debug("Request to save Utilisateur : {}", utilisateurDTO);
         utilisateurDTO.setPassword(EncryptionUtil.encrypt(utilisateurDTO.getPassword(), secretKey));
         Utilisateur utilisateur = new Utilisateur();
@@ -71,7 +76,7 @@ public class UtilisateurService {
         utilisateur.setPhoneNumber(utilisateurDTO.getPhoneNumber());
 
         utilisateur = utilisateurRepository.save(utilisateur);
-        return utilisateurMapper.toDto(utilisateur);
+        return utilisateurSimpleMapper.toDto(utilisateur);
     }
 
 
